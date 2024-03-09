@@ -6,8 +6,12 @@
         <p>ASSIST Tech Challenge</p>
         
         <div class="d-flex gap-3 mx-auto">
-            <a href="{{ route('landing.login')}}" class="btn btn-primary">Sign In</a>
-            <a href="{{ route('landing.register')}}" class="btn btn-primary">Create an account</a>
+            @if (Auth::check())
+                <a href="{{ route('dashboard.index') }}" class="btn btn-primary">Dashboard</a>
+            @else
+                <a href="{{ route('landing.login') }}" class="btn btn-primary">Login</a>
+                <a href="{{ route('landing.register') }}" class="btn btn-primary">Register</a>
+            @endif
         </div>
     </div>
 @endsection

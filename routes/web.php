@@ -32,5 +32,15 @@ Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {
 // Dashboard
 Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
     Route::get('/', 'DashboardController@index')->name('index');
+
+    Route::get('/members', 'DashboardController@members')->name('members');
+
+    Route::get('/members/{member}/remove/', 'DashboardController@removeMember')->name('members.remove');
 });
 
+// Organization
+Route::group(['prefix' => 'organization', 'as' => 'organization.'], function () {
+    Route::get('/{reference}/signup', 'OrganizationController@signup')->name('signup');
+
+    Route::post('/{reference}/register', 'OrganizationController@registerEmployee')->name('register');
+});

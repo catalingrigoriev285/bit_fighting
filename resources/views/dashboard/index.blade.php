@@ -1,21 +1,35 @@
 @extends('dashboard.body')
 
 @section('content')
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Bit Fighting</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="{{route('dashboard.index')}}">Home</a>
-                    </li>
-                </ul>
-                <a href="{{route('auth.logout')}}" class="btn btn-primary">Log Out</a>
-            </div>
+    <div class="container my-5">
+        @include('dashboard.partials.header')
+        <div class="d-flex gap-3 mt-3">
+            @include('dashboard.partials.aside')
+            <main class="w-75 bg-body-tertiary rounded p-3">
+                <h3>Welcome back, {{auth()->user()->name}}</h3>
+                <p>Here is your organization URL. Share this link with your team members to invite them to your organization.</p>
+                <div class="input-group">
+                    {{ html()->text('organization_url', $organization_url ?? '')->class('form-control')->placeholder('Organization URL') }}
+                    <button id="copy-link-btn" type="button" class="btn btn-outline-primary">Copy Link</button>
+                    <a href="{{ $organization_url }}" target="_blank" class="btn btn-outline-primary">Open Link</a>
+                </div>
+            </main>
         </div>
-    </nav>
+    </div>
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            $('#copy-link-btn').click(function() {
+                var organizationUrl = $('#organization_url').val();
+                navigator.clipboard.writeText(organizationUrl).then(function() {
+                    alert('Link copied to clipboard!');
+                }).catch(function() {
+                    alert('Failed to copy link to clipboard!');
+                });
+            });
+        });
+    </script>
+    
 @endsection

@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Organization;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Auth, Session;
+use Auth, Session, Str;
 
 class AuthController extends Controller
 {
@@ -24,8 +25,13 @@ class AuthController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'organization_name' => $request->organization_name,
+            ]);
+
+            Organization::updateOrCreate([
+                'name' => $request->organization_name,
                 'headquarter_address' => $request->headquarter_address,
+                'reference' => Str::random(10),
+                'user_id' => $user->id,
             ]);
 
             Auth::login($user);
