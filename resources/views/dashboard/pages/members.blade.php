@@ -20,8 +20,10 @@
                         @foreach ($organization_members as $member)
                             <li class="list-group-item">
                                 <div class="d-flex justify-content-between">
-                                    <span>{{ $member->name }}<br><span
-                                            class="badge text-bg-primary">{{ $member->email }}</span></span>
+                                    <span>{{ $member->name }}<br>
+                                        <span class="badge text-bg-primary">{{ $member->email }}</span>
+                                        {{$member->role->name ?? ''}}
+                                    </span>
                                     <a href="{{ route('dashboard.members.remove', $member->id) }}" class="btn btn-danger"
                                         style="height: fit-content;">Remove</a>
                                 </div>
