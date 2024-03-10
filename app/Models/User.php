@@ -42,4 +42,9 @@ class User extends Authenticatable
     ];
 
     protected $guard_name = 'web';
+
+    public function organization()
+    {
+        return $this->hasOne(Organization::class, 'user_id');
+    }
 }

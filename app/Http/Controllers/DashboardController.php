@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Organization;
 use Illuminate\Support\Facades\Hash;
 use Auth, Session, Str, URL;
+use DB;
 
 class DashboardController extends Controller
 {
@@ -38,5 +39,35 @@ class DashboardController extends Controller
         }
 
         return redirect()->route('dashboard.members');
+    }
+
+    public function skills()
+    {
+        $skills = DB::table('organizations_skills')->where('organization_id', auth()->user()->organization->id)->get();
+        return view('dashboard.pages.skills', ['skills' => $skills]);
+    }
+
+    public function storeSkills(Request $request)
+    {
+        $organization = Organization::where('user_id', auth()->user()->id)->first();
+        
+        DB::table('organizations_skills')->insert(['organization_id'=>$organization->id, 'skill'=>$request['skill_name']]);
+
+        session()->flash('success', 'Skills updated successfully');
+
+        return redirect()->route('dashboard.skills');
+    }
+
+    public function removeSkill($skill)
+    {
+        $organization = Organization::where('user_id', auth()->user()->id)->first();
+        $organization_skill = DB::table('organizations_skills')->where('id', $skill)->first();
+
+        if ($organization_skill) {
+            DB::table('organizations_skills')->where('id', $skill)->delete();
+            session()->flash('success', 'Skill removed successfully');
+        }
+
+        return redirect()->route('dashboard.skills');
     }
 }
