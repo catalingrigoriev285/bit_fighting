@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
+            
+            $table->unsignedBigInteger('organization_reference')->nullable();
+
             $table->timestamps();
         });
     }

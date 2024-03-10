@@ -29,14 +29,14 @@ class OrganizationController extends Controller
                 'password' => ['required', 'string', 'min:8'],
             ]);
 
-            $empoyee = Employee::create([
+            $empoyee = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'organization_id' => Organization::where('reference', $reference)->first()->id,
+                'organization_reference' => Organization::where('reference', $reference)->first()->id,
             ]);
 
-            $empoyee->assignRole('employee');
+            $empoyee->assignRole('employee');   
             Auth::login($empoyee);
         } catch (Exception $exception) {
             throw $exception;

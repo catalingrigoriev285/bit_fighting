@@ -22,6 +22,9 @@
                                 <div class="d-flex justify-content-between">
                                     <span>{{ $member->name }}<br>
                                         <span class="badge text-bg-primary">{{ $member->email }}</span>
+                                        @if($member->hasRole('employee'))
+                                            <span class="badge bg-success">{{ Str::title($member->roles->first()->name) }}</span>
+                                        @endif
                                         {{$member->role->name ?? ''}}
                                     </span>
                                     <a href="{{ route('dashboard.members.remove', $member->id) }}" class="btn btn-danger"
