@@ -34,12 +34,38 @@ class AuthController extends Controller
                 'user_id' => $user->id,
             ]);
 
+            $user->assignRole('organization_admin');
             Auth::login($user);
         } catch (Exception $exception) {
             throw $exception;
         }
 
         return to_route('dashboard.index');
+    }
+
+    public function registerEmployee(Request $request, $reference)
+    {
+        try {
+            $credentials = $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'email', 'unique:users'],
+                'password' => ['required', 'string', 'min:8'],
+            ]);
+
+            $empoyee = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'organization_reference' => Organization::where('reference', $reference)->first()->id,
+            ]);
+
+            $empoyee->assignRole('employee');   
+            Auth::login($empoyee);
+        } catch (Exception $exception) {
+            throw $exception;
+        }
+
+        return to_route('employee.index');
     }
 
     public function login(Request $request)
