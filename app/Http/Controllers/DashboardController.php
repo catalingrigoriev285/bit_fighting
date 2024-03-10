@@ -47,9 +47,7 @@ class DashboardController extends Controller
         $organization = Organization::where('user_id', auth()->user()->id)->first();
         $organization_member = $organization->employees()->where('id', $member)->first();
         $skills = DB::table('organizations_skills')->where('organization_id', auth()->user()->organization->id)->get();
-        $roles = Role::all()->reject(function ($role) {
-            return $role->name === 'organization_admin';
-        });
+        $roles = Role::all();
 
         return view('dashboard.pages.configure-member', ['organization' => $organization, 'organization_member' => $organization_member, 'skills' => $skills, 'roles' => $roles]);
     }
@@ -74,12 +72,14 @@ class DashboardController extends Controller
                 ]);
             }
 
-            // Remove all user roles
-            if($organization_member->roles->count() > 0) {
-                $organization_member->removeRole($organization_member->roles->first());
+            // Reseting user role
+            $organization_member->syncRoles([]);
+
+            if(isset($request['user_roles'])) {
+                foreach($request['user_roles'] as $role) {
+                    $organization_member->assignRole($role);
+                }
             }
-            
-            $organization_member->assignRole($request['user_role']);
 
             session()->flash('success', 'Member updated successfully');
             return redirect()->route('dashboard.members.configure', $member);

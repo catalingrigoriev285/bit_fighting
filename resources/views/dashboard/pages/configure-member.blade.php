@@ -45,16 +45,17 @@
                         @endforeach
                     </select>
                 </div>
-
                 <div class="d-flex gap-3 justify-content-between mb-3">
-                    <h4>Role</h4>
-                    <select class="form-select" name="user_role" id="user_role">
-                        @foreach($roles as $role)
+                    <h4>Roles</h4>
+                    <select class="form-select" name="user_roles[]" id="user_role" multiple="multiple">
+                        @foreach ($roles as $role)
                             @php
                                 $formattedRole = str_replace('_', ' ', $role->name);
                                 $formattedRole = ucwords($formattedRole);
+                                $organizationRoles = $organization_member->roles()->pluck('name')->toArray();
                             @endphp
-                            <option value="{{ $role->name }}" @if($role->id == $organization_member->roles()->first()->id) selected @endif>{{ $formattedRole }}</option>
+                            <option value="{{ $role->name }}" @if (in_array($role->name, $organizationRoles)) selected @endif>
+                                {{ $formattedRole }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -71,6 +72,7 @@
     <script>
         $(document).ready(function() {
             $('#user_skills').select2();
+            $('#user_role').select2();
         });
     </script>
 @endsection
