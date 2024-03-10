@@ -35,6 +35,8 @@ Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
 
     Route::get('/members', 'DashboardController@members')->name('members');
     Route::get('/members/{member}/remove/', 'DashboardController@removeMember')->name('members.remove');
+    Route::get('/members/{member}/configure/', 'DashboardController@configureMember')->name('members.configure');
+    Route::post('/members/{member}/configure/', 'DashboardController@updateMember')->name('members.update');
 
     Route::get('/skills', 'DashboardController@skills')->name('skills');
     Route::post('/skills', 'DashboardController@storeSkills')->name('skills.store');

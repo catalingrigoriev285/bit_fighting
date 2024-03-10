@@ -8,6 +8,7 @@
     <title>Bit Fighting - Dashboard</title>
 
     <link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/vendor/select2/css/select2.min.css') }}">
 </head>
 
 <body>
@@ -16,6 +17,7 @@
 <script src="{{ URL::asset('assets/vendor/bootstrap/js/bootstrap.bundle.min.js?v=1') }}"></script>
 <script src="{{ URL::asset('assets/vendor/bootstrap/js/bootstrap.min.js') }}"></script>
 <script src="{{ URL::asset('assets/vendor/jquery/jquery-3.7.1.min.js') }}"></script>
+<script src="{{ URL::asset('assets/vendor/select2/js/select2.min.js') }}"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
     integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">

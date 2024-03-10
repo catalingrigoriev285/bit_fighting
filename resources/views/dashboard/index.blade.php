@@ -13,6 +13,10 @@
                     <button id="copy-link-btn" type="button" class="btn btn-outline-primary">Copy Link</button>
                     <a href="{{ $organization_url }}" target="_blank" class="btn btn-outline-primary">Open Link</a>
                 </div>
+                <div class="container bg-body rounded p-3 mt-3">
+                    <h6>Your organization: {{$organization->name}}</h6>
+                    <h6>Total members: {{$organization->employees->count()}}</h6>
+                </div>
             </main>
         </div>
     </div>

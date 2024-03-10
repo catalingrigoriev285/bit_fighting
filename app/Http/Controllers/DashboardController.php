@@ -41,6 +41,42 @@ class DashboardController extends Controller
         return redirect()->route('dashboard.members');
     }
 
+    public function configureMember($member)
+    {
+        $organization = Organization::where('user_id', auth()->user()->id)->first();
+        $organization_member = $organization->employees()->where('id', $member)->first();
+        $skills = DB::table('organizations_skills')->where('organization_id', auth()->user()->organization->id)->get();
+
+        return view('dashboard.pages.configure-member', ['organization' => $organization, 'organization_member' => $organization_member, 'skills' => $skills]);
+    }
+
+    // update member
+    public function updateMember(Request $request, $member)
+    {
+        try {
+            $this->validate($request, [
+                'name' => 'required',
+                'email' => 'required|email',
+            ]);
+
+            $organization = Organization::where('user_id', auth()->user()->id)->first();
+            $organization_member = $organization->employees()->where('id', $member)->first();
+
+            if ($organization_member) {
+                $organization_member->update([
+                    'name' => $request['name'],
+                    'email' => $request['email'],
+                    'skills' => json_encode($request['skills'])
+                ]);
+            }
+
+            session()->flash('success', 'Member updated successfully');
+            return redirect()->route('dashboard.members.configure', $member);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
     public function skills()
     {
         $skills = DB::table('organizations_skills')->where('organization_id', auth()->user()->organization->id)->get();

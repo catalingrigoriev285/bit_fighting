@@ -25,10 +25,19 @@
                                         @if($member->hasRole('employee'))
                                             <span class="badge bg-success">{{ Str::title($member->roles->first()->name) }}</span>
                                         @endif
+                                        @if(isset($member->skills))
+                                            @foreach(json_decode($member->skills) as $skill)
+                                                <span class="badge bg-secondary">{{$skill}}</span>
+                                            @endforeach
+                                        @endif
                                         {{$member->role->name ?? ''}}
                                     </span>
-                                    <a href="{{ route('dashboard.members.remove', $member->id) }}" class="btn btn-danger"
-                                        style="height: fit-content;">Remove</a>
+                                    <div class="d-flex gap-3">
+                                        <a href="{{ route('dashboard.members.configure', $member->id) }}" class="btn btn-primary"
+                                            style="height: fit-content;">Configure</a>
+                                        <a href="{{ route('dashboard.members.remove', $member->id) }}" class="btn btn-danger"
+                                            style="height: fit-content;">Remove</a>
+                                    </div>
                                 </div>
                             </li>
                         @endforeach

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('password');
             
             $table->unsignedBigInteger('organization_reference')->nullable();
+            $table->text('skills')->nullable();
 
             $table->timestamps();
         });
