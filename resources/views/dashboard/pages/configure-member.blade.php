@@ -38,11 +38,21 @@
                 <div class="d-flex gap-3 justify-content-between mb-3">
                     <h4>Skills</h4>
 
-                <select class="form-select" id="user_skills" name="skills[]" multiple="multiple">
-                    @foreach($skills as $skill)
-                        <option value="{{$skill->skill}}" @if(in_array($skill->skill, json_decode($organization_member->skills))) selected @endif>{{$skill->skill}}</option>
-                    @endforeach
-                </select>
+                    <select class="form-select" id="user_skills" name="skills[]" multiple="multiple">
+                        @foreach ($skills as $skill)
+                            <option value="{{ $skill->skill }}" @if (in_array($skill->skill, json_decode($organization_member->skills))) selected @endif>
+                                {{ $skill->skill }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="d-flex gap-3 justify-content-between mb-3">
+                    <h4>Role</h4>
+                    <select class="form-select" name="user_role" id="user_role">
+                        @foreach($roles as $role)
+                            <option value="{{ $role->name }}" @if($role->id == $organization_member->roles()->first()->id) selected @endif>{{ $role->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div class="d-flex justify-content-end">

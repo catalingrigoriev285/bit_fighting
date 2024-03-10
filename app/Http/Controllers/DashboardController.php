@@ -7,6 +7,7 @@ use App\Models\Organization;
 use Illuminate\Support\Facades\Hash;
 use Auth, Session, Str, URL;
 use DB;
+use Spatie\Permission\Models\Role;
 
 class DashboardController extends Controller
 {
@@ -46,8 +47,9 @@ class DashboardController extends Controller
         $organization = Organization::where('user_id', auth()->user()->id)->first();
         $organization_member = $organization->employees()->where('id', $member)->first();
         $skills = DB::table('organizations_skills')->where('organization_id', auth()->user()->organization->id)->get();
+        $roles = Role::all();
 
-        return view('dashboard.pages.configure-member', ['organization' => $organization, 'organization_member' => $organization_member, 'skills' => $skills]);
+        return view('dashboard.pages.configure-member', ['organization' => $organization, 'organization_member' => $organization_member, 'skills' => $skills, 'roles' => $roles]);
     }
 
     // update member
@@ -69,6 +71,13 @@ class DashboardController extends Controller
                     'skills' => json_encode($request['skills'])
                 ]);
             }
+
+            // Remove all user roles
+            if($organization_member->roles->count() > 0) {
+                $organization_member->removeRole($organization_member->roles->first());
+            }
+            
+            $organization_member->assignRole($request['user_role']);
 
             session()->flash('success', 'Member updated successfully');
             return redirect()->route('dashboard.members.configure', $member);

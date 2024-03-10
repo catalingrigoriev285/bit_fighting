@@ -22,7 +22,7 @@
                                 <div class="d-flex justify-content-between">
                                     <span>{{ $member->name }}<br>
                                         <span class="badge text-bg-primary">{{ $member->email }}</span>
-                                        @if($member->hasRole('employee'))
+                                        @if($member->roles->count() > 0)
                                             <span class="badge bg-success">{{ Str::title($member->roles->first()->name) }}</span>
                                         @endif
                                         @if(isset($member->skills))
@@ -30,7 +30,6 @@
                                                 <span class="badge bg-secondary">{{$skill}}</span>
                                             @endforeach
                                         @endif
-                                        {{$member->role->name ?? ''}}
                                     </span>
                                     <div class="d-flex gap-3">
                                         <a href="{{ route('dashboard.members.configure', $member->id) }}" class="btn btn-primary"
