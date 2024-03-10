@@ -50,7 +50,11 @@
                     <h4>Role</h4>
                     <select class="form-select" name="user_role" id="user_role">
                         @foreach($roles as $role)
-                            <option value="{{ $role->name }}" @if($role->id == $organization_member->roles()->first()->id) selected @endif>{{ $role->name }}</option>
+                            @php
+                                $formattedRole = str_replace('_', ' ', $role->name);
+                                $formattedRole = ucwords($formattedRole);
+                            @endphp
+                            <option value="{{ $role->name }}" @if($role->id == $organization_member->roles()->first()->id) selected @endif>{{ $formattedRole }}</option>
                         @endforeach
                     </select>
                 </div>

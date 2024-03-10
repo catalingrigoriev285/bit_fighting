@@ -47,7 +47,9 @@ class DashboardController extends Controller
         $organization = Organization::where('user_id', auth()->user()->id)->first();
         $organization_member = $organization->employees()->where('id', $member)->first();
         $skills = DB::table('organizations_skills')->where('organization_id', auth()->user()->organization->id)->get();
-        $roles = Role::all();
+        $roles = Role::all()->reject(function ($role) {
+            return $role->name === 'organization_admin';
+        });
 
         return view('dashboard.pages.configure-member', ['organization' => $organization, 'organization_member' => $organization_member, 'skills' => $skills, 'roles' => $roles]);
     }

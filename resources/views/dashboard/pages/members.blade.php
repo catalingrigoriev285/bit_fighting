@@ -23,7 +23,7 @@
                                     <span>{{ $member->name }}<br>
                                         <span class="badge text-bg-primary">{{ $member->email }}</span>
                                         @if($member->roles->count() > 0)
-                                            <span class="badge bg-success">{{ Str::title($member->roles->first()->name) }}</span>
+                                            <span class="badge bg-success">{{ str_replace('_', ' ', Str::title($member->roles->first()->name)) }}</span>
                                         @endif
                                         @if(isset($member->skills))
                                             @foreach(json_decode($member->skills) as $skill)
