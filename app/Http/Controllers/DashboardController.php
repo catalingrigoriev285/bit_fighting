@@ -90,7 +90,7 @@ class DashboardController extends Controller
 
     public function skills()
     {
-        $skills = DB::table('organizations_skills')->where('organization_id', auth()->user()->organization->id)->get();
+        $skills = DB::table('organizations_skills')->where('organization_id', auth()->user()->organization->id)->paginate(5);
         return view('dashboard.pages.skills', ['skills' => $skills]);
     }
 

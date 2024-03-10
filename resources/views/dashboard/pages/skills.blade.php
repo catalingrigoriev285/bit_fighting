@@ -36,6 +36,9 @@
                             </li>
                         @endforeach
                     </ul>
+                    <div class="d-flex justify-content-end mt-3">
+                        {{ $skills->links() }}
+                    </div>
                 @else
                     @if (!session('success'))
                         <div class="alert alert-warning" role="alert">
