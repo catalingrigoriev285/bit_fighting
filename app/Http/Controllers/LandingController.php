@@ -10,14 +10,4 @@ class LandingController extends Controller
     {
         return view('landing.index');
     }
-
-    public function register()
-    {
-        return view('landing.auth.register');
-    }
-
-    public function login()
-    {
-        return view('landing.auth.login');
-    }
 }

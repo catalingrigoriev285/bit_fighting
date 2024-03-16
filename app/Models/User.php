@@ -19,6 +19,12 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
+
     protected $guarded = [];
 
     /**
@@ -38,13 +44,59 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'password' => 'hashed',
     ];
 
-    protected $guard_name = 'web';
+    public function organizations()
+    {
+        $organizations = $this->hasMany(OrganizationMember::class);
+        return $organizations;
+    }
 
     public function organization()
     {
-        return $this->hasOne(Organization::class, 'user_id');
+        return $this->belongsTo(OrganizationMember::class);
+    }
+
+    public function skills()
+    {
+        return $this->belongsToMany(OrganizationSkill::class, 'organization_member_skills', 'organization_member_id', 'organization_skill_id');
+    }
+
+    public function experience($project_id)
+    {
+        $user = $this;
+
+        $experience = 0;
+        $weight = 0;
+
+        $user_roles = $user->roles()->pluck('name', 'id');
+        $user_skills = $user->skills->pluck('name', 'id');
+
+        if(!is_null($project_id)) {
+            $project = Project::find($project_id);
+
+            if(isset($project)) {
+                $project_skills = json_decode($project->technologies_used);
+                $project_roles = json_decode($project->needed_roles);
+                
+                foreach($project_roles as $role) {
+                    if(isset($user_roles[$role])) {
+                        $experience += 1;
+                        $weight += (int)$role;
+                    }
+                }
+
+                foreach($project_skills as $skill) {
+                    if(isset($user_skills[$skill])) {
+                        $experience += 1;
+                        $weight += (int)$skill;
+                    }
+                }
+
+                return ($weight * $experience) / 100;
+            }
+        } 
+
+        return 0;
     }
 }
