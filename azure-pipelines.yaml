@@ -45,7 +45,6 @@ jobs:
 
       - script: |
           php artisan migrate
-          php artisan db:seed RoleSeeder --class
         workingDirectory: $(projectRoot)
         displayName: "Migrate database"
       
