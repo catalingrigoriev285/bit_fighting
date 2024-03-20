@@ -3,8 +3,10 @@
 
 Revolutionizing Team Assembly in Enterprises a cutting-edge solution designed to streamline the process of assembling project teams in medium to large enterprises.
 
-
-
+![img](images/landing.png)
+![img](images/dashboard.png)
+![img](images/projects.png)
+![img](images/members.png)
 
 ## Prerequisites
 
