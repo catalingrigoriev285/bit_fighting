@@ -1,0 +1,65 @@
+variables:
+  phpVersion: '8.2'
+  projectRoot: '.'
+
+jobs:
+  - job: deploy
+    variables:
+      - group: bit-fighting-variables
+    steps:
+      - script: |
+          sudo update-alternatives --set php /usr/bin/php$(phpVersion)
+          sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
+          sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
+          sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
+          sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
+          php -version
+        workingDirectory: $(projectRoot)
+        displayName: 'Use PHP version $(phpVersion)'
+      
+      - script: composer install --no-interaction --prefer-dist
+        workingDirectory: $(projectRoot)
+        displayName: 'Composer install'
+
+      - script: |
+          cp .env.example .env
+        workingDirectory: $(projectRoot)
+        displayName: "Create env file"
+
+      - script: |
+          echo "DB_HOST=$(DB_HOST)" >> .env
+          echo "DB_PORT=$(DB_PORT)" >> .env
+          echo "DB_DATABASE=$(DB_DATABASE)" >> .env
+          echo "DB_USERNAME=$(DB_USERNAME)" >> .env
+          echo "DB_PASSWORD=$(DB_PASSWORD)" >> .env
+          echo "APP_URL=$(APP_URL)" >> .env
+        workingDirectory: $(projectRoot)
+        displayName: "Create env file"
+
+      - script: |
+          php artisan key:generate
+        workingDirectory: $(projectRoot)
+        displayName: "Generate Application Key"
+
+      - script: |
+          php artisan migrate
+          php artisan db:seed RoleSeeder --class
+        workingDirectory: $(projectRoot)
+        displayName: "Migrate database"
+      
+      - task: ArchiveFiles@2
+        displayName: 'Archive files'
+        inputs:
+          rootFolderOrFile: '$(projectRoot)'
+          includeRootFolder: false
+          archiveType: zip
+          archiveFile: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+          replaceExistingArchive: true
+      
+      - task: AzureWebApp@1
+        displayName: 'Deploy Azure Web App'
+        inputs:
+          azureSubscription: 'bit-fighting-service-connection'
+          appType: 'webAppLinux'
+          appName: "atc-2024-bit-fighting-be-linux-web-app"
+          package: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
